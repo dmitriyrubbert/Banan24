@@ -1,0 +1,35 @@
+
+server {
+
+    server_name banan24.com; # Подставьте свой домен
+    listen 443 ssl http2;
+
+    location /.well-known {
+        root /var/www/html; # Понадобится для letsencrypt
+    }
+
+    # Статические файлы
+    location = /favicon.ico {
+        alias /home/gold/projects/banan24/src/static/favicon.ico;
+    }
+    location = /robots.txt {
+        alias /home/gold/projects/banan24/src/static/robots.txt;
+    }
+
+    location /static/ {
+        root /home/gold/projects/banan24/src/;
+    }
+    location /media/ {
+        root /home/gold/projects/banan24/src/;
+    }
+
+    # Взаимодействуем с Django-приложением через unix-сокет
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/home/gold/projects/banan24/banan24.sock;
+    }
+
+    ssl_certificate /home/gold/projects/banan24/src/socket/cert.pem;
+    ssl_certificate_key /home/gold/projects/banan24/src/socket/key.pem;
+    # ssl_trusted_certificate /etc/letsencrypt/live/banan24.com/chain.pem;
+}

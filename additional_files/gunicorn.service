@@ -1,0 +1,12 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=gold
+Group=www-data
+WorkingDirectory=/home/gold/projects/banan24/src/
+ExecStart=/home/gold/projects/banan24/bin/gunicorn --access-logfile - --error-logfile error.log --workers 2 --bind unix:/home/gold/projects/banan24/banan24.sock banan24.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
